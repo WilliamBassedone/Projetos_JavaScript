@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style type="text/css">
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: helvetica;
+            background-image: linear-gradient(to right, #E65763, #34073D);
+            color: #FFF;
+            text-align: center;
+            padding-top: 30px;
+        }
+
+        #adicionar-tarefas-container {
+            width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #tarefas-cabecalho {
+            margin-top: 40px;
+        }
+
+        #adicionar-tarefa-formulario {
+            position: relative;
+        }
+
+        #adicionar-tarefa-formulario input {
+            border: 1px solid #343434;
+            background: #FFFFFF;
+            color: #34073D;
+            padding: 15px;
+            font-size: 18px;
+            width: 100%;
+        }
+
+        #adicionar-tarefa-formulario input::placeholder {
+            color: #34073D;
+        }
+
+        #botao-adicionar {
+            position: absolute;
+            background: #FFF;
+            border: 1px solid #34073D;
+            cursor: pointer;
+            transition: .5s;
+            width: 60px;
+            height: 53px;
+            top: 0;
+            right: 0;
+            padding-top: 3px;
+        }
+
+        #botao-adicionar:hover {
+            background-color: #34073D;
+            color: #FFF;
+        }
+
+        ion-icon {
+            font-size: 25px;
+        }
+
+        /* lista-tarefas-container */
+
+        #lista-tarefas {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        #lista-tarefas li {
+            text-align: left;
+            height: 50px;
+            line-height: 50px;
+            position: relative;
+            border-bottom: 3px solid #34073D;
+            background: #FFF;
+            color: #34073D;
+            margin-bottom: 10px;
+            padding-left: 15px;
+            transition: .5s;
+            font-weight: bold;
+        }
+
+        #lista-tarefas li span {
+            font-size: 18px;
+        }
+
+        #lista-tarefas ion-icon {
+            position: absolute;
+            top: 0;
+            height: 40px;
+            transition: .5s;
+            cursor: pointer;
+            width: 30px;
+            padding: 5px;
+        }
+
+        .botao-concluido {
+            right: 40px;
+        }
+
+        .botao-concluido:hover {
+            color: #FFF;
+            background: #09E01B;
+        }
+
+        .botao-remover {
+            right: 0;
+        }
+
+        .botao-remover:hover {
+            color: #FFF;
+            background-color: #EB2907;
+        }
+
+        .ocultar {
+            display: none;
+        }
+
+        #lista-tarefas li.concluido {
+            background-color: #34073D;
+            color: #FFF;
+            text-decoration: line-through;
+        }
+    </style>
+    <title>TAREFAS</title>
+</head>
+
+<body>
+    <div id="adicionar-tarefas-container">
+        <div id="tarefas-cabecalho">
+            <h2>Salve sua próxima tarefa:</h2>
+            <form id="adicionar-tarefa-formulario">
+                <input type="text" id="titulo-tarefa" placeholder="O que você vai fazer?" />
+                <button id="botao-adicionar" type="submit">
+                    <ion-icon name="add-outline"></ion-icon>
+                </button>
+            </form>
+        </div>
+        <div id="lista-tarefas-container">
+            <h2>Estas são suas tarefas:</h2>
+            <ul id="lista-tarefas">
+                <li class="box-tarefa modeloLista ocultar">
+                    <span class="titulo-tarefa">TESTE</span>
+                    <ion-icon class="botao-concluido" name="checkmark-outline"></ion-icon>
+                    <ion-icon class="botao-remover" name="close-outline"></ion-icon>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!--  -->
+    <!-- javascript -->
+    <script type="text/javascript">
+        // EVENTO DE ADICIONAR TAREFA
+        const botaoAdicionar = document.querySelector("#botao-adicionar");
+        botaoAdicionar.addEventListener("click", function (e) {
+            e.preventDefault();
+            adicionarTarefa();
+        });
+
+        // FUNÇÃO QUE ADICIONA A TAREFA
+        function adicionarTarefa() {
+            const tituloTarefa = document.querySelector("#titulo-tarefa").value;
+            if (tituloTarefa) {
+                // CLONA O ELEMENTO LISTA
+                const modeloLista = document.querySelector(".modeloLista");
+                const novaTarefa = modeloLista.cloneNode(true);
+                // ADICIONA O TÍTULO
+                novaTarefa.querySelector(".titulo-tarefa").textContent = tituloTarefa;
+                // REMOVER CLASSES DESNECESSÁRIAS
+                novaTarefa.classList.remove("modeloLista");
+                novaTarefa.classList.remove("ocultar");
+                // ADICIONA A TAREFA NA LISTA
+                const lista = document.querySelector("#lista-tarefas");
+                lista.appendChild(novaTarefa);
+                // LIMPAR O TEXTO
+                document.querySelector("#titulo-tarefa").value = "";
+                // ADICIONA O EVENTO REMOVER
+                const botaoRemoverTarefa = novaTarefa.querySelector(".botao-remover").addEventListener("click", function () {
+                    removerTarefa(this);
+                });
+                // ADICIONA EVENTO DE COMPLETAR TAREFA
+                const botaoConcluirTarefa = novaTarefa.querySelector(".botao-concluido").addEventListener("click", function () {
+                    completarTarefa(this);
+                });
+            }
+        }
+        // FUNÇÃO DE REMOVER TAREFA
+        function removerTarefa(tarefa) {
+            tarefa.parentNode.remove(true);
+        }
+        // FUNÇÃO DE COMPLETAR A TAREFA
+        function completarTarefa(tarefa) {
+            const tarefaCompleta = tarefa.parentNode;
+            tarefaCompleta.classList.toggle("concluido");
+        }
+    </script>
+    <script type="module" src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.esm.js"></script>
+</body>
+
+</html>
